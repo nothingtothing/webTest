@@ -1,4 +1,4 @@
-﻿<!DOCTYPE html>
+<!DOCTYPE html>
 <html>
 <head>   
 <meta charset="utf-8">
@@ -149,11 +149,62 @@ src="//libs.baidu.com/jquery/1.8.3/jquery.min.js">
 	  </button>
   </div>
   <div class="main" id="main">
-      <h2>您好!</h2>
-      <p id="titles">欢迎光临邮箱</p>
-	  <img id="tree" src="../static/ye.png" alt="e-mail" width="700" height="700"  style="float: right;position:absolute;top: 0;right: 0; " />
-      <br>
-	  <p>Some text</p><p>Some text</p><p>Some text</p><p>Some text</p><p>Some text</p><p>Some text</p><p>Some text</p><p>Some text</p><p>Some text</p><p>Some text</p><p>Some text</p><p>Some text</p><p>Some text</p><p>Some text</p><p>Some text</p><p>Some text</p>
+    <h2>用户名或关键字过滤</h2>
+	<div>
+    <form action="wordaction" method="post">
+        垃圾过滤词关键字:<input type="text" name="uname" required>
+		<input type="submit" value="添加">
+        <input type="reset" value="重置"><br>
+    </form>
+	<br>
+	<form action="worddelaction" method="post">
+	<select name="delword">
+	{% for keyword in keywords %}
+	<option value={{keyword[0]}}>{{keyword[0]}}</option>
+	{% endfor %}
+	</select>    
+	<input type="submit" value="删除">
+    <br>
+    </form>
+	<div class="fail">
+	<h4>垃圾过滤词:</h4>
+	<table frame="hsides">
+	{% for keyword in keywords %}
+	<tr>
+	{{keyword[0]}}
+	</tr>
+	{% endfor %}
+	</table>
+	</div>
+	</div>
+	<br>
+	<br>
+  <div class="blacknames">
+	<form action="useraction" method="post">
+        添加用户到黑名单:<input type="text" name="username" required>
+		<input type="submit" value="添加">
+        <input type="reset" value="重置"><br>
+    </form>
+	<br>
+	<form action="userdelaction" method="post">
+	<select name="deluser">
+	{% for username in names %}
+	<option value={{username[0]}}>{{username[0]}}</option>
+	{% endfor %}
+	</select>    
+	<input type="submit" value="删除">
+    <br>
+    </form>
+	<div class="fail">
+	<h4>用户黑名单:</h4>
+	<table frame="hsides">
+	{% for username in names %}
+	<tr>
+	<td>{{username[0]}}</td>
+	</tr>
+	{% endfor %}
+	</table>
+	</div>
   </div>
 </div>
 </div>
@@ -189,12 +240,10 @@ function myFunction1()
 }
 	
 function myFunction2()
-{
-	var sender = '<form action="send" method="post"><input type="submit"  value="发送"><br><br>收件人:<input type="text" name="geter" style="width:800px" required><br><br>主题:&nbsp; &nbsp;<input type="text" name="Topic" style="width:800px" required><br><br>内容:&nbsp; &nbsp;<textarea name="content" cols="110" rows="20"></textarea></form>'
+	{
+	var sender = '<form action="send" method="post"><input type="submit" value="发送"><br><br>收件人:<input type="text" name="geter" required><br><br>主题:<input type="text" name="Topic" required><br><br>内容:<input type="text" name="content"></form>'
 	document.getElementById("main").innerHTML = sender;
-
-
-}
+	}
 function func(x){
 	var email = '<div class="info"><h3>'+ham[x].title+'</h3>' + '<p>收件人：'+ham[x].to+'</p>'+ '<p>发件人：'+ham[x].from+'</p></div>'+ '<p>内容：'+ham[x].content+'</p>';
 	document.getElementById("main").innerHTML = email;

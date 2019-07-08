@@ -11,11 +11,12 @@
     </SearchPath>
     <WorkingDirectory>.</WorkingDirectory>
     <LaunchProvider>Web launcher</LaunchProvider>
-    <WebBrowserUrl>http://127.0.0.1:5000</WebBrowserUrl>
+    <WebBrowserUrl>http://127.0.0.1</WebBrowserUrl>
     <OutputPath>.</OutputPath>
     <SuppressCollectPythonCloudServiceFiles>true</SuppressCollectPythonCloudServiceFiles>
     <Name>WebProject</Name>
     <RootNamespace>WebProject</RootNamespace>
+    <WebBrowserPort>5000</WebBrowserPort>
   </PropertyGroup>
   <PropertyGroup Condition=" '$(Configuration)' == 'Debug' ">
     <DebugSymbols>true</DebugSymbols>
@@ -29,23 +30,19 @@
     <Compile Include="chinese.py" />
     <Compile Include="chineseYeahYeah.py" />
     <Compile Include="dataCleaner.py" />
+    <Compile Include="DBaction.py" />
     <Compile Include="Email_NB.py" />
     <Compile Include="modelLoadForTest.py" />
     <Compile Include="realTest.py" />
     <Compile Include="show.py">
       <SubType>Code</SubType>
     </Compile>
+    <Compile Include="test.py" />
   </ItemGroup>
   <ItemGroup>
     <Folder Include="templates\" />
   </ItemGroup>
   <ItemGroup>
-    <Content Include="web.config" />
-    <None Include="CustomProfile.pubxml" />
-    <None Include="MyTestForWeb - FTP.pubxml" />
-    <None Include="MyTestForWeb - Web Deploy.pubxml" />
-    <None Include="NSTWebTest - FTP.pubxml" />
-    <None Include="NSTWebTest - Web Deploy.pubxml" />
     <Content Include="templates\2.html" />
     <Content Include="templates\image.png" />
     <Content Include="templates\immm.jpg" />
