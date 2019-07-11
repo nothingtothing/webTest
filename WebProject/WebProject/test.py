@@ -16,7 +16,7 @@ import pyodbc
 
 
 def getConnection():
-    driver = 'SQL Server Native Client 10.0'  # 因版本不同而异
+    driver = 'ODBC Driver 17 for SQL Server'  # 因版本不同而异
     server = 'wkfgdbservice.chinanorth.cloudapp.chinacloudapi.cn,1433'  
     user = 'sa'
     password = 'rootL123456789'
