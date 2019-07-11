@@ -21,6 +21,15 @@ class DBac:
         cur.close()
         conn.close()
         return rows   #list
+
+    def insertEmail(self,strFrom,strTo,strTitle,strText,intT):
+        conn = pyodbc.connect(driver=_driver, server=_server, user=_user, password=_password, database=_database)
+        cur = conn.cursor()
+        sql = "insert into Emails([from],[to],title,content,type) values('%s','%s','%s','%s','%d')"%(strFrom,strTo,strTitle,strText,intT)
+        cur.execute(sql)
+        conn.commit()
+        cur.close()
+        conn.close()
     
     #表，数据
     def insert(self,table,str):

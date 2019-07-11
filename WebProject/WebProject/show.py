@@ -4,6 +4,7 @@ from test import joint
 from flask_script import Manager, Shell
 from flask_mail import Mail, Message
 from threading import Thread
+from papapa import guess_charset, addNew,decode_str,get_header,EmailInit
 import os
 import pandas as pd
 import json
@@ -13,8 +14,8 @@ app = Flask(__name__)
 app.config['MAIL_SERVER'] = 'smtp.qq.com'
 app.config['MAIL_PORT'] = 587
 app.config['MAIL_USE_TLS'] = True
-app.config['MAIL_USERNAME'] = '1078176775@qq.com'
-app.config['MAIL_PASSWORD'] = 'fhfktworiggwhheh'
+app.config['MAIL_USERNAME'] = '1678120695@qq.com'
+app.config['MAIL_PASSWORD'] = 'oxlxnspfguthdajc'
 mail = Mail(app)
 
 db = DBaction.DBac()
@@ -77,7 +78,7 @@ def sendmail():
     title = request.form.get("Topic")
     geter = request.form.get("geter")
     content = request.form.get("content")
-    msg = Message(title, sender='1078176775@qq.com', recipients=[geter])
+    msg = Message(title, sender='1678120695@qq.com', recipients=[geter])
     msg.body = content
     with app.app_context():
         mail.send(msg)
@@ -90,5 +91,6 @@ def sendmail():
 
 if __name__ == '__main__':
 
-    app.run(host = '0.0.0.0', port = 8000)
+    app.run(debug=True)
+    #addNew()
     conn.close()

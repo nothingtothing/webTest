@@ -1,0 +1,502 @@
+<!DOCTYPE html>
+<html lang="en">
+  <head>
+    <meta charset="utf-8" />
+    <meta name="viewport" content="width=device-width, initial-scale=1, shrink-to-fit=no" />
+    <title>邮箱主页</title>
+    <meta name="description" content="" />
+    <meta name="author" content="Tooplate" />
+    <!-- Bootstrap core CSS -->
+    <link href="../static/bootstrap/css/bootstrap.min.css" rel="stylesheet" />
+    <!-- Additional CSS Files -->
+    <link href="https://fonts.googleapis.com/css?family=Lato:100,300,400,700,900" rel="stylesheet" />
+    <link rel="stylesheet" href="../static/css/fontawesome.css" />
+    <link rel="stylesheet" href="../static/css/tooplate-style.css" />
+    <link rel="stylesheet" href="../static/css/owl.css" />
+    <link rel="stylesheet" href="../static/css/lightbox.css" />
+  </head>
+  <body>
+    <div id="page-wraper">
+      <!-- Sidebar Menu -->
+      <div class="responsive-nav">
+        <i class="fa fa-bars" id="menu-toggle"></i>
+        <div id="menu" class="menu">
+          <i class="fa fa-times" id="menu-close"></i>
+          <div class="container">
+            <div class="image">
+              <a href="#"><img src="../static/images/logo-image.jpg" alt="Blugoon by Tooplate" /></a>
+            </div>
+            <div class="author-content">
+              <h4>无可奉告</h4>
+              <span>1078176775@qq.com</span>
+            </div>
+            <nav class="main-nav" role="navigation">
+              <ul class="main-menu">
+                <li><a href="#section1">主页</a></li>
+                <li><a href="#section2">邮件</a></li>
+                <li><a href="#section3">设置</a></li>
+                <li><a href="#section4">写信</a></li>
+                
+              </ul>
+            </nav>
+            <div class="social-network">
+              <ul class="soial-icons">
+                <li>
+                  <a href="#"><i class="fa fa-facebook"></i></a>
+                </li>
+                <li>
+                  <a href="#"><i class="fa fa-twitter"></i></a>
+                </li>
+                <li>
+                  <a href="#"><i class="fa fa-linkedin"></i></a>
+                </li>
+                <li>
+                  <a href="#"><i class="fa fa-dribbble"></i></a>
+                </li>
+                <li>
+                  <a href="#"><i class="fa fa-rss"></i></a>
+                </li>
+              </ul>
+            </div>
+            <div class="copyright-text">
+              <p>
+              Design: 无可奉告
+              </p>
+            </div>
+          </div>
+        </div>
+      </div>
+
+      <section class="section about-me" data-section="section1">
+        <div class="container">
+        <div class="top-header">
+        	<img src="../static/images/timg.jpg" alt="email-1" />
+        </div>
+          <div class="section-heading">
+            <h2>Welcome to Mailbox</h2>
+            <div class="line-dec"></div>
+            <span id="hello"> </span><br>
+            <p id="amount">&nbsp;&nbsp;在您的收件箱中有{{amount}}封<a rel="find" href="#mails">邮件</a></p>
+          </div>
+          <div class="right-image-post">
+            <div class="row">
+ 
+              <div class="col-md-8">
+                <div class="left-text">
+                  <h4>Welcome to Mailbox</h4>
+                  <div class="white-button">
+                    <a href="#">Read More</a>
+                  </div>
+                </div>
+              </div>
+              
+            </div>
+          </div>
+
+        </div>
+      </section>
+
+      <section class="section my-services" id="mails" data-section="section2">
+        <div class="container">
+          <div class="section-heading">
+            <button class="hambtn"><h2>收件箱</h2></button>
+            <button class="spambtn"><h2>垃圾箱</h2></button>
+            <div class="line-dec"></div>
+        </div>
+
+      <div id="accordion">
+        {% for email in emails %}
+        <div class="card">
+          <div class="card-header">
+              <a class="collapsed card-link" data-toggle="collapse" href="#collapse{{email.id}}" style="color:#2279BD;">主题:{{email.title}}<p></p>发件人:{{email.from}}</a>
+              <button type="button" id="delemail" value={{email.id}} style = "padding:0;float:right;margin-left:20px;border:0;background-color: #F7F7F7">设置为垃圾邮件</button>
+              <a id = "JQTestOn" class="collapsed card-link" data-toggle="collapse" href="#collapse{{email.id}}" style="float:right;margin-left:20px;color:#2279BD;">详情</a>             
+          </div>
+          <div id="collapse{{email.id}}" class="collapse" data-parent="#accordion">
+              <p>{{email.content}}</p>
+          </div>
+        </div> 
+        {% endfor %}                       
+      </div>
+   </div>
+    <div class="container">
+      <ul class="pagination">
+        <li class="page-item"><a class="page-link" href="#">Previous</a></li>
+        <li class="page-item"><a class="page-link" href="#">1</a></li>
+        <li class="page-item"><a class="page-link" href="#">2</a></li>
+        <li class="page-item"><a class="page-link" href="#">3</a></li>
+        <li class="page-item"><a class="page-link" href="#">Next</a></li>
+      </ul>
+    </div>
+
+        
+      </section>
+
+      <section class="section my-work" data-section="section3">
+        <div class="container">
+          <div class="section-heading">
+            <h2>设置</h2>
+            <div class="line-dec"></div>
+            
+          </div>
+          <div class="row">
+            <div class="isotope-wrapper">
+              <form class="isotope-toolbara">
+                <label><input type="radio" data-type="black" checked="" name="isotope-filter" />
+                  <span>过滤词</span></label>
+                <label><input type="radio" data-type="pretty" name="isotope-filter" />
+                  <span>黑名单</span></label>
+                <label><input type="radio" data-type="sexy" name="isotope-filter" />
+                  <span>白名单</span></label>
+                <label><input type="radio" data-type="beach" name="isotope-filter" />
+                  <span>特别关注</span></label
+                >
+              </form>
+              <div class="isotope-box">
+                <div class="isotope-item" data-type="black">
+                  
+                    <table class="table table-striped table-hover">
+                        <tbody id="blackWord">
+                            <tr>
+                                <th>序号</th>
+                                <th>过滤词</th>
+                                <th>操作</th>
+                            </tr>
+                            {% for w in words %}
+                            <tr>
+                                <td>1</td>
+                                <td>{{w[0]}}</td>
+                                <td><button class="deletebtn" name="delate" value="{{w[0]}}">删除</button></td>
+                            </tr>
+                            {% endfor %}
+                        </tbody>
+                    </table>
+                </div>
+
+                <div class="isotope-item" data-type="pretty">
+                  <table class="table table-striped table-hover">
+                    <tbody id="blockedFrom">
+                        <tr>
+                            <th>序号</th>
+                            <th>黑名单</th>
+                            <th>操作</th>
+                        </tr>
+                        {% for w in blockedfroms %}
+                        <tr>
+                            <td>1</td>
+                            <td>{{w[0]}}</td>
+                            <td><button class="deletebtn1" name="delate1" value={{w[0]}}>删除</button></td>
+                        </tr>
+                        {% endfor %}
+                    </tbody>
+                </table>
+                </div>
+
+                <div class="isotope-item" data-type="sexy">
+                  <table class="table table-striped table-hover">
+                  <tbody id="whiteList">
+                      <tr>
+                          <th>序号</th>
+                          <th>白名单</th>
+                          <th>操作</th>
+                      </tr>
+                      {% for w in whitelists %}
+                      <tr>
+                          <td>1</td>
+                          <td>{{w[0]}}</td>
+                          <td><button class="deletebtn2" name="delate2" value={{w[0]}}>删除</button></td>
+                      </tr>
+                      {% endfor %}
+                  </tbody>
+              </table>
+              </div>
+                <div class="isotope-item" data-type="beach">
+                  <figure class="snip1321">
+                    <img src="../static/images/woman-feeling.jpg" alt="woman feeling" />
+                    <figcaption>
+                      <a href="../static/images/woman-feeling.jpg"
+                        data-lightbox="image-1"
+                        data-title="Her Feeling"><i class="fa fa-search"></i></a>
+                      <h4>Her Feeling</h4>
+                      <span>Ut sollicitudin risus</span>
+                    </figcaption>
+                  </figure>
+                </div>
+
+              </div>
+            </div>
+          </div>
+        </div>
+      </section>
+
+      <section class="section contact-me" data-section="section4">
+        <div class="container">
+          <div class="section-heading">
+            <h2>写信</h2>
+            <div class="line-dec"></div>
+            
+          </div>
+          <div class="row">
+            <div class="right-content">
+              <div class="container">
+                <form id="contact" action="/sendmessage" method="post">
+                  <div class="row">
+
+                    <div class="col-md-12">
+                      <fieldset>
+                        <input name="email" type="text" class="form-control"
+                          id="email" placeholder="请输入收件人邮箱" required=""  />
+                      </fieldset>
+                    </div>
+                    <div class="col-md-12">
+                      <fieldset>
+                        <input name="subject" type="text" class="form-control" 
+                          id="subject" placeholder="Subject..." required="" />
+                      </fieldset>
+                    </div>
+                    <div class="col-md-12">
+                      <fieldset>
+                        <textarea name="message" rows="6" class="form-control"
+                          id="message" placeholder="Your message..." required ></textarea>
+                      </fieldset>
+                    </div>
+                    <div class="col-md-12">
+                      <fieldset>
+                        <button type="submit" id="form-submit" class="button">
+                          Send Message
+                        </button>
+                      </fieldset>
+                    </div>
+                  </div>
+                </form>
+              </div>
+            </div>
+          </div>
+        </div>
+      </section>
+    </div>
+    <!-- Scripts -->
+    <!-- Bootstrap core JavaScript -->
+    <script src="../static/jquery/jquery.min.js"></script>
+    <script src="../static/bootstrap/js/bootstrap.bundle.min.js"></script>
+
+    <script src="../static/js/isotope.min.js"></script>
+    <script src="../static/js/owl-carousel.js"></script>
+    <script src="../static/js/lightbox.js"></script>
+    <script src="../static/js/custom.js"></script>
+    <script>
+      now = new Date(),hour = now.getHours();
+      if(hour<12){document.getElementById("hello").innerHTML = "上午好，无可奉告"}
+      else if(hour>12 && hour<18){document.getElementById("hello").innerHTML = "下午好，无可奉告"}
+      else if(hour>16 && hour<24){document.getElementById("hello").innerHTML = "晚上好，无可奉告"}
+
+
+      function appendmail(id,topic,from,content){
+        return '<div class="card">\
+                <div class="card-header">\
+                <a class="collapsed card-link" data-toggle="collapse" href="#'+id +'" style="color:#2279BD;">主题:'+topic+'<p></p>发件人:'+from+'</a> \
+                <button type="button" id="delemail" value="'+id+'" style = "padding:0;float:right;margin-left:20px;border:0;background-color: #F7F7F7">设置为垃圾邮件</button>\
+                <a id = "JQTestOn" class="collapsed card-link" data-toggle="collapse" href="#collapse'+id+'" style="float:right;margin-left:20px;color:#2279BD;">详情</a></div>\
+                <div id="collapse'+id+'" class="collapse" data-parent="#accordion">\
+                <p>'+content+'</p>\
+                </div>\
+                </div> '
+      }
+
+      function clearall(){
+        document.getElementById("accordion").innerHTML='';
+      }
+
+      $(document).ready(function(){
+        $("#delemail").click(function(){
+          var id = $(this).val();
+          $.get("/deletemail",
+          {
+            Id:id
+          },
+          function(data){
+            datas = eval('('+data+')');
+            clearall();
+            for(var i = 0;i < datas.length;i++)
+            {
+              $("#accordion").append(appendmail(datas[i].id,datas[i].title,datas[i].from,datas[i].content))
+            }
+          }
+          )
+        })
+      })
+
+
+
+      $(document).ready(function(){
+        $(".hambtn").click(function(){
+          $.get("/showhams",
+          function(data){
+            datas = eval('('+data+')');
+            clearall();
+            for(var i = 0;i < datas.length;i++)
+            {
+              $("#accordion").append(appendmail(datas[i].id,datas[i].title,datas[i].from,datas[i].content))
+            }
+          }
+          )
+        })
+      })
+
+
+      $(document).ready(function(){
+        $(".spambtn").click(function(){
+          $.get("/showspams",
+          function(data){
+            datas = eval('('+data+')');
+            clearall();
+            for(var i = 0;i < datas.length;i++)
+            {
+              $("#accordion").append(appendmail(datas[i].id,datas[i].title,datas[i].from,datas[i].content))
+            }
+          }
+          )
+        })
+      })
+
+
+      function appendtext(i,bword){
+        return '<tr><td>'+i+'</td><td>' + bword +'</td><td><button class="deletebtn" name="delate" value="' + bword + '">删除</button></td></tr>';
+      }
+
+      function clearBlackWordText(){
+        document.getElementById("blackWord").innerHTML = 
+        '<tr><th>序号</th><th>过滤词</th><th>操作</th></tr>';
+      }
+
+      $(document).ready(function(){
+        $(".deletebtn").click(function(){
+          var dleword = $(this).val();
+          
+          $.get("/blackwords",
+          {
+            keyword:dleword
+          },
+          function(data){
+            datas = eval('(' + data + ')');
+            clearBlackWordText();
+            
+            for(var i = 0;i < datas.length;i++)
+            {
+              $("#blackWord").append(appendtext(i,datas[i].key));
+            }
+            alert($(".deletebtn:first").text())
+          });
+        });
+      });
+      
+      function appendtext1(i,bword){
+        return '<tr><td>'+i+'</td><td>' + bword +'</td><td><button class="deletebtn1" name="delate1" value="' + bword + '">删除</button></td></tr>';
+      }
+      function clearBlockedFromtext(){
+        document.getElementById("blockedFrom").innerHTML = 
+        '<tr><th>序号</th><th>黑名单</th><th>操作</th></tr>';
+      }
+
+      $(document).ready(function(){
+        $(".deletebtn1").click(function(){
+          var dleword1 = $(this).val();
+          $.get("/blockedfrom",
+          {
+            keyword1:dleword1
+          },
+          function(data){
+            datas = eval('(' + data + ')');
+            clearBlockedFromtext();
+            
+            for(var i = 0;i < datas.length;i++)
+            {
+              $("#blockedFrom").append(appendtext1(i,datas[i].key))
+            }
+            
+          });
+        });
+      });
+
+      function appendtext2(i,bword){
+        return '<tr><td>'+i+'</td><td>' + bword +'</td><td><button class="deletebtn2" name="delate2" value="' + bword + '">删除</button></td></tr>';
+      }
+      function clearWhitelisttext(){
+        document.getElementById("whiteList").innerHTML = 
+        '<tr><th>序号</th><th>白名单</th><th>操作</th></tr>';
+      }
+
+      $(document).ready(function(){
+        $(".deletebtn2").click(function(){
+          var dleword2 = $(this).val();
+          $.get("/whitelist",
+          {
+            keyword2:dleword2
+          },
+          function(data){
+            datas = eval('(' + data + ')');
+            clearWhitelisttext();
+            
+            for(var i = 0;i < datas.length;i++)
+            {
+              $("#WhiteList").append(appendtext2(i,datas[i].key))
+            }
+            
+          });
+        });
+      });
+      
+
+
+
+      //according to loftblog tut
+      $(".main-menu li:first").addClass("active");
+
+      var showSection = function showSection(section, isAnimate) {
+        var direction = section.replace(/#/, ""),
+          reqSection = $(".section").filter(
+            '[data-section="' + direction + '"]'
+          ),
+          reqSectionPos = reqSection.offset().top - 0;
+
+        if (isAnimate) {
+          $("body, html").animate(
+            {
+              scrollTop: reqSectionPos
+            },
+            800
+          );
+        } else {
+          $("body, html").scrollTop(reqSectionPos);
+        }
+      };
+
+      var checkSection = function checkSection() {
+        $(".section").each(function() {
+          var $this = $(this),
+            topEdge = $this.offset().top - 80,
+            bottomEdge = topEdge + $this.height(),
+            wScroll = $(window).scrollTop();
+          if (topEdge < wScroll && bottomEdge > wScroll) {
+            var currentId = $this.data("section"),
+              reqLink = $("a").filter("[href*=\\#" + currentId + "]");
+            reqLink
+              .closest("li")
+              .addClass("active")
+              .siblings()
+              .removeClass("active");
+          }
+        });
+      };
+
+      $(".main-menu").on("click", "a", function(e) {
+        e.preventDefault();
+        showSection($(this).attr("href"), true);
+      });
+
+      $(window).scroll(function() {
+        checkSection();
+      });
+    </script>
+  </body>
+</html>

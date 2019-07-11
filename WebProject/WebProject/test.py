@@ -24,6 +24,19 @@ def getConnection():
     conn = pyodbc.connect(driver=driver, server=server, user=user, password=password, database=database)
     return(conn)
 
+def getWhitelist():
+    conn=getConnection()
+    cur = conn.cursor()
+    sql = 'select * from Whitelist'  # 查询语句
+    cur.execute(sql)
+    rows = cur.fetchall()# list
+    whitelist=str(rows)
+    index = len(rows)
+    for i in range(0,index):
+        rows[i] = ''.join(rows[i])
+    white_list = rows
+    return white_list
+
 def getBlockedWords():
     conn=getConnection()
     cur = conn.cursor()
@@ -49,7 +62,7 @@ def getBlockedWords():
 
 def getMails():
     conn = getConnection()
-    sql2 = 'select * from Emails'  # 查询语句
+    sql2 = 'select * from emailTest'  # 查询语句
     #cur2 = conn.cursor()
     #cur2.execute(sql2)
     df = pd.read_sql(sql2, conn)
@@ -61,46 +74,60 @@ def getMails():
     #ows2[i] = ''.join(rows2[i]
     return df
 
-def testModelBySame(blockwordsList,blockfromList): 
+def testModelBySame(blockwordsList,blockfromList): #判断是否为垃圾邮件
     words_blocklist,from_blocklist=getBlockedWords()
+    white_list=getWhitelist()
     df=getMails()
-    print("df:")
-    print(df.dtypes)
     dfForEvaluate = df[df['type']==2]
-    print("dfForEvaluate")
-    print(dfForEvaluate)
+    #print("dfForEvaluate")
+    #print(dfForEvaluate)
     dfSafe = df[df['type']==0]
-    print("dfSafe")
-    print(dfSafe)
+    #print("dfSafe")
+    #print(dfSafe)
+    wordsStr = list(dfForEvaluate["content"].astype("str"))
     fromStr = list(dfForEvaluate["from"].astype("str")) 
     titleStr =  list(dfForEvaluate["title"].astype("str"))
    # print(titleStr)
-    for myword in fromStr:
+    i=-1
+    for myword in fromStr:#如在白名单中，直接判为正常邮件。在黑名单中，直接判为垃圾邮件。
+        i=i+1
         for word in myword.strip().split(","):
-            if(word in from_blocklist):
-                dfForEvaluate.ix[fromStr.index(myword),'blocked']=1
-                dfForEvaluate.ix[fromStr.index(myword),'type']=1
-  
+            if(word in white_list):
+                dfForEvaluate.ix[i,'blocked']=0
+                dfForEvaluate.ix[i,'type']=0
+            elif(word in from_blocklist):
+                dfForEvaluate.ix[i,'blocked']=1
+                dfForEvaluate.ix[i,'type']=1
+            else:
+                dfForEvaluate.ix[i,'blocked']=2
+   
 
-    wordsStr = list(dfForEvaluate["content"].astype("str"))
+ 
     #print(wordsStr)
-    for myword1 in wordsStr:
-            for eachword in words_blocklist:
-                if(myword1.find(eachword)!=-1):
-                   # print(myword1)
-                    dfForEvaluate.ix[wordsStr.index(myword1),'blocked']=1
-                    dfForEvaluate.ix[wordsStr.index(myword1),'type']=1
+    j=-1
     for myword2 in titleStr:
+            j=j+1
             for eachword1 in words_blocklist:
                 if(myword2.find(eachword1)!=-1):
                    # print(myword2)
-                    dfForEvaluate.ix[titleStr.index(myword2),'blocked']=1
-                    dfForEvaluate.ix[titleStr.index(myword2),'type']=1
+                    dfForEvaluate.ix[j,'blocked']=1
+                    dfForEvaluate.ix[j,'type']=1
+           
 
+    k=-1
+    for myword1 in wordsStr:
+            k=k+1
+            for eachword in words_blocklist:
+                if(myword1.find(eachword)!=-1):
+                   # print(myword1)
+                    dfForEvaluate.ix[k,'blocked']=1
+                    dfForEvaluate.ix[k,'type']=1
+              
 
+    #print(dfForEvaluate)
     dfBlocked = dfForEvaluate[dfForEvaluate['blocked'] == 1]
-    dfLeft = dfForEvaluate[dfForEvaluate['blocked'] != 1]
-
+    dfWhitelist = dfForEvaluate[dfForEvaluate['blocked'] == 0]
+    dfLeft = dfForEvaluate[dfForEvaluate['blocked'] ==2]
     transformer_model = joblib.load("../data/result_save_TFM_try")
     svd_model = joblib.load("../data/result_save_SVDM_try")
     model = joblib.load("../data/result_save_AdaBoost_try")
@@ -117,7 +144,7 @@ def testModelBySame(blockwordsList,blockfromList):
     resultList =  [int(i) for i in resultList]
     dfLeft['type'] = resultList
     print(resultList)
-    return dfSafe,dfLeft,dfBlocked
+    return dfWhitelist,dfSafe,dfLeft,dfBlocked
 
 
    # print("准确率为:%.5f" % precision_score(y_test,y_predict))
@@ -129,47 +156,69 @@ def testModelBySame(blockwordsList,blockfromList):
 def joint():
     words_blocklist,from_blocklist=getBlockedWords()
     df=getMails()
-    dfSafe,dfLeft,dfBlocked = testModelBySame(words_blocklist,from_blocklist)
+    dfWhitelist,dfSafe,dfLeft,dfBlocked = testModelBySame(words_blocklist,from_blocklist)
     ham = []
     spam = []
     dfSpam = dfLeft[dfLeft['type'] == 1]
     dfHam = dfLeft[dfLeft['type'] != 1]
     for index, row in dfHam.iterrows():
         dict ={}
+        dict['id']=row['ID']
         dict['from']=row['from']   
         dict['to']=row['to']
         dict['title']=row['title']
-        dict['content']=row['content']
+        dict['content']=row['CHTML']
         dict['type']=(int)(row['type'])
         ham.append(dict)
 
     for index, row in dfSafe.iterrows():
         dict ={}
+        dict['id']=row['ID']
         dict['from']=row['from'] 
         dict['to']=row['to']
         dict['title']=row['title']
-        dict['content']=row['content']
+        dict['content']=row['CHTML']
+        dict['type']=(int)(row['type'])
+        ham.append(dict)
+
+    for index, row in dfWhitelist.iterrows():
+        dict ={}
+        dict['id']=row['ID']
+        dict['from']=row['from'] 
+        dict['to']=row['to']
+        dict['title']=row['title']
+        dict['content']=row['CHTML']
         dict['type']=(int)(row['type'])
         ham.append(dict)
 
     for  index, row in dfSpam.iterrows():
         dict ={}
+        dict['id']=row['ID']
         dict['from']=row['from'] 
         dict['to']=row['to']
         dict['title']=row['title']
-        dict['content']=row['content']
+        dict['content']=row['CHTML']
         dict['type']=(int)(row['type'])
         spam.append(dict)
 
     for  index, row in dfBlocked.iterrows():
         dict ={}
+        dict['id']=row['ID']
         dict['from']=row['from'] 
         dict['to']=row['to']
         dict['title']=row['title']
-        dict['content']=row['content']
+        dict['content']=row['CHTML']
         dict['type']=(int)(row['type'])
         spam.append(dict)
-    #print(ham)
-    #print('/n')
+    print(ham)
+    print('/n')
+    print('/n')
+    print('/n')
+    print('/n')
+    print('/n')
+    print('/n')
+    print('/n')
     #print(spam)
     return(ham,spam)
+
+joint()
