@@ -25,7 +25,7 @@
           <i class="fa fa-times" id="menu-close"></i>
           <div class="container">
             <div class="image">
-              <a href="#"><img src="../static/images/wkfg.png" alt="Blugoon by Tooplate" /></a>
+              <a href="#"><img src="../static/images/web.png" alt="Blugoon by Tooplate" /></a>
             </div>
             <div class="author-content">
               
@@ -37,7 +37,7 @@
                 <li><a href="#section2">邮件</a></li>
                 <li><a href="#section3">设置</a></li>
                 <li><a href="#section4">写信</a></li>
-                <li><a class="help" onclick="javascrtpt:window.location.href='/docs'" style="color: #F7F7F7;cursor: pointer;">帮助</a></li>
+                <li><a class="help" style="color: #F7F7F7;cursor: pointer;">帮助</a></li>
               </ul>
             </nav>
 
@@ -264,6 +264,9 @@
       else if(hour>12 && hour<18){document.getElementById("hello").innerHTML = "下午好，无可奉告"}
       else if(hour>16 && hour<24){document.getElementById("hello").innerHTML = "晚上好，无可奉告"}
 
+      $(".help").click(function(){
+                window.open("docs");
+            });
       
       function showlove(){
         $.get("/showfocus",
