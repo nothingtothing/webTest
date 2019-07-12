@@ -36,7 +36,7 @@
                 <li><a href="#section2">邮件</a></li>
                 <li><a href="#section3">设置</a></li>
                 <li><a href="#section4">写信</a></li>
-                
+                <li><a class="help" onclick="javascrtpt:window.location.href='/docs'" style="color: #F7F7F7;cursor: pointer;">帮助</a></li>
               </ul>
             </nav>
             <div class="social-network">
@@ -78,20 +78,6 @@
             <span id="hello"> </span><br>
             <p id="amount">&nbsp;&nbsp;在您的收件箱中有{{amount}}封<a rel="find" href="#mails">邮件</a></p>
           </div>
-          <div class="right-image-post">
-            <div class="row">
- 
-              <div class="col-md-8">
-                <div class="left-text">
-                  <h4>Welcome to Mailbox</h4>
-                  <div class="white-button">
-                    <a href="#">Read More</a>
-                  </div>
-                </div>
-              </div>
-              
-            </div>
-          </div>
 
         </div>
       </section>
@@ -99,8 +85,8 @@
       <section class="section my-services" id="mails" data-section="section2">
         <div class="container">
           <div class="section-heading">
-            <button class="hambtn"><h2>收件箱</h2></button>
-            <button class="spambtn"><h2>垃圾箱</h2></button>
+            <button id="hambtn" class="hambtn" style="margin-left: 30px; border: 0; background: transparent;"><h2 style="color: #2279BD" id="receivebox">收件箱</h2></button>
+            <button id="spambtn" class="spambtn" style="margin-left: 30px; border: 0; background: transparent;"><h2 id="rubbishbox">垃圾箱</h2></button>
             <div class="line-dec"></div>
         </div>
 
@@ -109,11 +95,11 @@
         <div class="card">
           <div class="card-header">
               <a class="collapsed card-link" data-toggle="collapse" href="#collapse{{email.id}}" style="color:#2279BD;">主题:{{email.title}}<p></p>发件人:{{email.from}}</a>
-              <button type="button" id="delemail" value={{email.id}} style = "padding:0;float:right;margin-left:20px;border:0;background-color: #F7F7F7">设置为垃圾邮件</button>
+              <button type="button" id="delemail" value={{email.id}} onclick="deletemail({{email.id}})" style = "padding:0;float:right;margin-left:20px;border:0;background-color: #F7F7F7">删除</button>
               <a id = "JQTestOn" class="collapsed card-link" data-toggle="collapse" href="#collapse{{email.id}}" style="float:right;margin-left:20px;color:#2279BD;">详情</a>             
           </div>
-          <div id="collapse{{email.id}}" class="collapse" data-parent="#accordion">
-              <p>{{email.content}}</p>
+          <div id="collapse{{email.id}}" class="collapse" data-parent="#accordion" style="color: #2279BD">
+              <p style="color: #2279BD">{{email.content}}</p>
           </div>
         </div> 
         {% endfor %}                       
@@ -127,9 +113,7 @@
         <li class="page-item"><a class="page-link" href="#">3</a></li>
         <li class="page-item"><a class="page-link" href="#">Next</a></li>
       </ul>
-    </div>
-
-        
+    </div> 
       </section>
 
       <section class="section my-work" data-section="section3">
@@ -156,7 +140,7 @@
                 <div class="isotope-item" data-type="black">
                   
                     <table class="table table-striped table-hover">
-                        <tbody id="blackWord">
+                        <tbody id="blackWord" style="color: #F7F7F7">
                             <tr>
                                 <th>序号</th>
                                 <th>过滤词</th>
@@ -166,16 +150,23 @@
                             <tr>
                                 <td>1</td>
                                 <td>{{w[0]}}</td>
-                                <td><button class="deletebtn" name="delate" value="{{w[0]}}">删除</button></td>
+                                <td><button type="button" class="deletebtn"  value="{{w[0]}}" onclick="deleteword({{w[1]}})">删除</button></td>
                             </tr>
                             {% endfor %}
                         </tbody>
                     </table>
+                    <div class="guolvtable">
+                    <form onsubmit="return false">
+                        新增垃圾过滤词关键字:<input id="rubbishword" type="text" name="rubbishword" required>
+                        <input class="addblackword" type="submit" value="添加" style="border-radius: 5px; " onclick="addblackword()">
+                        <input type="reset" value="重置" style="border-radius: 5px; ">
+                    </form>
+                  </div>
                 </div>
 
                 <div class="isotope-item" data-type="pretty">
                   <table class="table table-striped table-hover">
-                    <tbody id="blockedFrom">
+                    <tbody id="blockedFrom" style="color: #F7F7F7">
                         <tr>
                             <th>序号</th>
                             <th>黑名单</th>
@@ -185,16 +176,21 @@
                         <tr>
                             <td>1</td>
                             <td>{{w[0]}}</td>
-                            <td><button class="deletebtn1" name="delate1" value={{w[0]}}>删除</button></td>
+                            <td><button class="deletebtn1" name="delate1" value={{w[0]}} onclick="deleteblackname({{w[1]}})" >删除</button></td>
                         </tr>
                         {% endfor %}
                     </tbody>
                 </table>
+                <form onsubmit="return false">
+                    新增黑名单成员:<input id="blackname" type="text" name="blackname" required>
+                    <input class="addblackname" type="submit" value="添加" style="border-radius: 5px; " onclick="addblackname()">
+                    <input type="reset" value="重置" style="border-radius: 5px; ">
+                </form>
                 </div>
 
                 <div class="isotope-item" data-type="sexy">
                   <table class="table table-striped table-hover">
-                  <tbody id="whiteList">
+                  <tbody id="whiteList" style="color: #F7F7F7">
                       <tr>
                           <th>序号</th>
                           <th>白名单</th>
@@ -204,23 +200,39 @@
                       <tr>
                           <td>1</td>
                           <td>{{w[0]}}</td>
-                          <td><button class="deletebtn2" name="delate2" value={{w[0]}}>删除</button></td>
+                          <td><button class="deletebtn2" name="delate2" value={{w[0]}} onclick="deletewhitename({{w[1]}})">删除</button></td>
                       </tr>
                       {% endfor %}
                   </tbody>
               </table>
+              <form onsubmit="return false">
+                  新增白名单成员:<input id="whitename" type="text" name="whitename" required>
+                  <input type="submit" value="添加" style="border-radius: 5px; " onclick="addwhitename()">
+                  <input type="reset" value="重置" style="border-radius: 5px; ">
+              </form>
               </div>
                 <div class="isotope-item" data-type="beach">
-                  <figure class="snip1321">
-                    <img src="../static/images/woman-feeling.jpg" alt="woman feeling" />
-                    <figcaption>
-                      <a href="../static/images/woman-feeling.jpg"
-                        data-lightbox="image-1"
-                        data-title="Her Feeling"><i class="fa fa-search"></i></a>
-                      <h4>Her Feeling</h4>
-                      <span>Ut sollicitudin risus</span>
-                    </figcaption>
-                  </figure>
+                  <table class="table table-striped table-hover">
+                  <tbody id="focusList" style="color: #F7F7F7">
+                      <tr>
+                          <th>序号</th>
+                          <th>特别关注</th>
+                          <th>操作</th>
+                      </tr>
+                      {% for w in focusedpeople %}
+                      <tr>
+                          <td>1</td>
+                          <td>{{w[0]}}</td>
+                          <td><button class="deletebtn3" name="delate3" value={{w[0]}} onclick="deletefocusname({{w[1]}})">删除</button></td>
+                      </tr>
+                      {% endfor %}
+                  </tbody>
+              </table>
+              <form onsubmit="return false">
+                  新增特别关注:<input id="focusname" type="text" name="focusname" required>
+                  <input type="submit" value="添加" style="border-radius: 5px; " onclick="addfocusname()">
+                  <input type="reset" value="重置" style="border-radius: 5px; ">
+              </form>
                 </div>
 
               </div>
@@ -239,29 +251,16 @@
           <div class="row">
             <div class="right-content">
               <div class="container">
-                <form id="contact" action="/sendmessage" method="post">
+                <form id="contact" onsubmit="return false">
                   <div class="row">
-
+                      收件人：<input name="email" type="text" class="form-control"
+                      id="email" placeholder="请输入收件人邮箱" required=""  />
+                      主题：&nbsp;&nbsp;&nbsp;&nbsp;<input name="subject" type="text" class="form-control" 
+                      id="subject" placeholder="Subject..." required="" />
+                      内容：<textarea name="message" rows="6" class="form-control"
+                      id="message" placeholder="Your message..." required ></textarea>
                     <div class="col-md-12">
-                      <fieldset>
-                        <input name="email" type="text" class="form-control"
-                          id="email" placeholder="请输入收件人邮箱" required=""  />
-                      </fieldset>
-                    </div>
-                    <div class="col-md-12">
-                      <fieldset>
-                        <input name="subject" type="text" class="form-control" 
-                          id="subject" placeholder="Subject..." required="" />
-                      </fieldset>
-                    </div>
-                    <div class="col-md-12">
-                      <fieldset>
-                        <textarea name="message" rows="6" class="form-control"
-                          id="message" placeholder="Your message..." required ></textarea>
-                      </fieldset>
-                    </div>
-                    <div class="col-md-12">
-                      <fieldset>
+                      <fieldset >
                         <button type="submit" id="form-submit" class="button">
                           Send Message
                         </button>
@@ -290,27 +289,49 @@
       else if(hour>12 && hour<18){document.getElementById("hello").innerHTML = "下午好，无可奉告"}
       else if(hour>16 && hour<24){document.getElementById("hello").innerHTML = "晚上好，无可奉告"}
 
+      showlove();
+      function showlove(){
+        $.get("/showfocus",
+        function(data){
+          alert("您有特别关注的联系人的来信，请及时查收"+data);
+        })
+
+        
+      }
+
+
 
       function appendmail(id,topic,from,content){
         return '<div class="card">\
                 <div class="card-header">\
                 <a class="collapsed card-link" data-toggle="collapse" href="#'+id +'" style="color:#2279BD;">主题:'+topic+'<p></p>发件人:'+from+'</a> \
-                <button type="button" id="delemail" value="'+id+'" style = "padding:0;float:right;margin-left:20px;border:0;background-color: #F7F7F7">设置为垃圾邮件</button>\
+                <button type="button" id="delemail" value="'+id+'" onclick="deletemail('+id+')" style = "padding:0;float:right;margin-left:20px;border:0;background-color: #F7F7F7">删除</button>\
                 <a id = "JQTestOn" class="collapsed card-link" data-toggle="collapse" href="#collapse'+id+'" style="float:right;margin-left:20px;color:#2279BD;">详情</a></div>\
-                <div id="collapse'+id+'" class="collapse" data-parent="#accordion">\
+                <div id="collapse'+id+'" class="collapse" data-parent="#accordion" style="color: #2279BD">\
                 <p>'+content+'</p>\
                 </div>\
                 </div> '
       }
 
+      function appendmail1(id,topic,from,content){
+        return '<div class="card">\
+                <div class="card-header">\
+                <a class="collapsed card-link" data-toggle="collapse" href="#'+id +'" style="color:#2279BD;">主题:'+topic+'<p></p>发件人:'+from+'</a> \
+                <button type="button" id="delemail1" value="'+id+'" onclick="deletespam('+id+')" style = "padding:0;float:right;margin-left:20px;border:0;background-color: #F7F7F7">删除</button>\
+                <a id = "JQTestOn" class="collapsed card-link" data-toggle="collapse" href="#collapse'+id+'" style="float:right;margin-left:20px;color:#2279BD;">详情</a></div>\
+                <div id="collapse'+id+'" class="collapse" data-parent="#accordion" style="color: #2279BD">\
+                <p>'+content+'</p>\
+                </div>\
+                </div> '
+      }
+
+
       function clearall(){
         document.getElementById("accordion").innerHTML='';
       }
-
-      $(document).ready(function(){
-        $("#delemail").click(function(){
-          var id = $(this).val();
-          $.get("/deletemail",
+      
+      function deletemail(id){
+        $.get("/deletemail",
           {
             Id:id
           },
@@ -321,10 +342,27 @@
             {
               $("#accordion").append(appendmail(datas[i].id,datas[i].title,datas[i].from,datas[i].content))
             }
+            alert("删除成功");
           }
           )
-        })
-      })
+      }
+
+      function deletespam(id){
+        $.get("/deletespam",
+          {
+            Id:id
+          },
+          function(data){
+            datas = eval('('+data+')');
+            clearall();
+            for(var i = 0;i < datas.length;i++)
+            {
+              $("#accordion").append(appendmail1(datas[i].id,datas[i].title,datas[i].from,datas[i].content))
+            }
+            alert("删除成功");
+          }
+          )
+      }
 
 
 
@@ -338,30 +376,36 @@
             {
               $("#accordion").append(appendmail(datas[i].id,datas[i].title,datas[i].from,datas[i].content))
             }
+            $("#receivebox").css("color","#2279BD");
+            $("#rubbishbox").css("color","white");
           }
-          )
-        })
-      })
+          );
+        });
+      });
 
 
       $(document).ready(function(){
         $(".spambtn").click(function(){
+
           $.get("/showspams",
           function(data){
+            
             datas = eval('('+data+')');
             clearall();
             for(var i = 0;i < datas.length;i++)
             {
-              $("#accordion").append(appendmail(datas[i].id,datas[i].title,datas[i].from,datas[i].content))
+              $("#accordion").append(appendmail1(datas[i].id,datas[i].title,datas[i].from,datas[i].content))
             }
+            $("#receivebox").css("color","white");
+            $("#rubbishbox").css("color","#2279BD");
           }
           )
         })
       })
 
 
-      function appendtext(i,bword){
-        return '<tr><td>'+i+'</td><td>' + bword +'</td><td><button class="deletebtn" name="delate" value="' + bword + '">删除</button></td></tr>';
+      function appendtext(i,bword,id){
+        return '<tr><td>'+i+'</td><td>' + bword +'</td><td><button class="deletebtn" name="delate" value="' + bword + '" onclick="deleteword('+id+')">删除</button></td></tr>';
       }
 
       function clearBlackWordText(){
@@ -369,41 +413,54 @@
         '<tr><th>序号</th><th>过滤词</th><th>操作</th></tr>';
       }
 
-      $(document).ready(function(){
-        $(".deletebtn").click(function(){
-          var dleword = $(this).val();
-          
-          $.get("/blackwords",
+      function addblackword(){
+        var newword = $("#rubbishword").val();
+        alert(newword);
+        $.get("/addnewword",
           {
-            keyword:dleword
+            Newword:newword
           },
           function(data){
             datas = eval('(' + data + ')');
             clearBlackWordText();
-            
             for(var i = 0;i < datas.length;i++)
             {
-              $("#blackWord").append(appendtext(i,datas[i].key));
+              $("#blackWord").append(appendtext(i,datas[i].key,datas[i].id));
             }
-            alert($(".deletebtn:first").text())
           });
-        });
-      });
-      
-      function appendtext1(i,bword){
-        return '<tr><td>'+i+'</td><td>' + bword +'</td><td><button class="deletebtn1" name="delate1" value="' + bword + '">删除</button></td></tr>';
+      }
+
+
+      function deleteword(w){
+        
+        $.get("/blackwords",
+          {
+            keyword:w
+          },
+          function(data){
+            datas = eval('(' + data + ')');
+            clearBlackWordText();
+            for(var i = 0;i < datas.length;i++)
+            {
+              $("#blackWord").append(appendtext(i,datas[i].key,datas[i].id));
+            }
+          });
+          alert("删除"+w)
+      }
+
+
+      function appendtext1(i,bword,id){
+        return '<tr><td>'+i+'</td><td>' + bword +'</td><td><button class="deletebtn1" name="delate1" value="' + bword + '" onclick="deleteblackname('+id+')">删除</button></td></tr>';
       }
       function clearBlockedFromtext(){
         document.getElementById("blockedFrom").innerHTML = 
         '<tr><th>序号</th><th>黑名单</th><th>操作</th></tr>';
       }
 
-      $(document).ready(function(){
-        $(".deletebtn1").click(function(){
-          var dleword1 = $(this).val();
-          $.get("/blockedfrom",
+      function deleteblackname(w){
+        $.get("/blockedfrom",
           {
-            keyword1:dleword1
+            keyword1:w
           },
           function(data){
             datas = eval('(' + data + ')');
@@ -411,27 +468,45 @@
             
             for(var i = 0;i < datas.length;i++)
             {
-              $("#blockedFrom").append(appendtext1(i,datas[i].key))
+              $("#blockedFrom").append(appendtext1(i,datas[i].key,datas[i].id))
             }
             
           });
-        });
-      });
+      }
 
-      function appendtext2(i,bword){
-        return '<tr><td>'+i+'</td><td>' + bword +'</td><td><button class="deletebtn2" name="delate2" value="' + bword + '">删除</button></td></tr>';
+
+      function addblackname(){
+        var newbname = $("#blackname").val();
+        alert(newbname)
+        
+        $.get("/addblacknames",
+          {
+            Newword1:newbname
+          },
+          function(data){
+            datas = eval('(' + data + ')');
+            clearBlockedFromtext();
+            for(var i = 0;i < datas.length;i++)
+            {
+              $("#blockedFrom").append(appendtext1(i,datas[i].key,datas[i].id));
+            }
+          });
+      }
+
+
+      function appendtext2(i,bword,id){
+        return '<tr><td>'+i+'</td><td>' + bword +'</td><td><button class="deletebtn2" name="delate2" value="' + bword + '" onclick="deletewhitename('+id+')">删除</button></td></tr>';
       }
       function clearWhitelisttext(){
         document.getElementById("whiteList").innerHTML = 
         '<tr><th>序号</th><th>白名单</th><th>操作</th></tr>';
       }
 
-      $(document).ready(function(){
-        $(".deletebtn2").click(function(){
-          var dleword2 = $(this).val();
-          $.get("/whitelist",
+      function deletewhitename(w)
+      {
+        $.get("/whitelist",
           {
-            keyword2:dleword2
+            keyword2:w
           },
           function(data){
             datas = eval('(' + data + ')');
@@ -439,14 +514,91 @@
             
             for(var i = 0;i < datas.length;i++)
             {
-              $("#WhiteList").append(appendtext2(i,datas[i].key))
+              $("#whiteList").append(appendtext2(i,datas[i].key,datas[i].id))
             }
             
           });
+      }
+
+      function addwhitename(){
+        var newWname = $("#whitename").val();
+        alert(newWname);
+        $.get("/addwhitenames",
+          {
+            Newword2:newWname
+          },
+          function(data){
+            datas = eval('(' + data + ')');
+            clearWhitelisttext();
+            for(var i = 0;i < datas.length;i++)
+            {
+              $("#whiteList").append(appendtext2(i,datas[i].key,datas[i].id));
+            }
+          });
+      }
+
+      function appendtext3(i,bword,id){
+        return '<tr><td>'+i+'</td><td>' + bword +'</td><td><button class="deletebtn3" name="delate3" value="' + bword + '" onclick="deletefocusname('+id+')">删除</button></td></tr>';
+      }
+      function clearfocuslisttext(){
+        document.getElementById("focusList").innerHTML = 
+        '<tr><th>序号</th><th>特别关注</th><th>操作</th></tr>';
+      }
+
+      function deletefocusname(w){
+        $.get("/focuslist",
+          {
+            keyword3:w
+          },
+          function(data){
+            datas = eval('(' + data + ')');
+            clearfocuslisttext();
+            
+            for(var i = 0;i < datas.length;i++)
+            {
+              $("#focusList").append(appendtext3(i,datas[i].key,datas[i].id))
+            }
+            
+          });
+      }
+
+      function addfocusname(){
+        var newFname = $("#focusname").val();
+        alert(newFname);
+        $.get("/addfocusnames",
+          {
+            Newword3:newFname
+          },
+          function(data){
+            datas = eval('(' + data + ')');
+            clearfocuslisttext();
+            for(var i = 0;i < datas.length;i++)
+            {
+              $("#focusList").append(appendtext3(i,datas[i].key,datas[i].id));
+            }
+          });
+      }
+
+
+      $(document).ready(function(){
+        $(".button").click(function(){
+          var Receiver = $("#email").val();
+          var Subject = $("#subject").val();
+          var Content = $("#message").val();
+          
+          $.get("/sendmessage",
+          {
+            receiver:Receiver,
+            subject:Subject,
+            message:Content
+          },
+          function(data)
+          {
+            alert(data);
+          });
+          
         });
       });
-      
-
 
 
       //according to loftblog tut

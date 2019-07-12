@@ -27,7 +27,7 @@ def getConnection():
 def getWhitelist():
     conn=getConnection()
     cur = conn.cursor()
-    sql = 'select * from Whitelist'  # 查询语句
+    sql = 'select name from Whitelist'  # 查询语句
     cur.execute(sql)
     rows = cur.fetchall()# list
     whitelist=str(rows)
@@ -40,25 +40,38 @@ def getWhitelist():
 def getBlockedWords():
     conn=getConnection()
     cur = conn.cursor()
-    sql = 'select * from BadWords'  # 查询语句
+    sql = 'select words from BadWords'  # 查询语句
     cur.execute(sql)
     rows = cur.fetchall()# list
     blockwords=str(rows)
     index = len(rows)
     for i in range(0,index):
-        rows[i] = ''.join(rows[i])
+        rows[i] = ''.join(str(s) for s in rows)
     words_blocklist = rows
 
-    sql1 = 'select * from BadNames'  # 查询语句
+    sql1 = 'select blackMail from BadNames'  # 查询语句
     cur1 = conn.cursor()
     cur1.execute(sql1)
     rows1 = cur1.fetchall()# list
     blockfrom=str(rows1)
     index1 = len(rows1)
     for i in range(0,index1):
-        rows1[i] = ''.join(rows1[i])
+        rows1[i] = ''.join(str(s) for s in rows)
     from_blocklist = rows1
     return words_blocklist,from_blocklist
+
+def getFocusname(): #从数据库中获取信息
+    conn = getConnection()
+    sql = 'select focusname from Focusnames' 
+    cur = conn.cursor()
+    cur.execute(sql)
+    rows = cur.fetchall()
+    focusname=str(rows)
+    index = len(rows)
+    for i in range(0,index):
+        rows[i] = ''.join(str(s) for s in rows)
+    focus_name = rows
+    return focus_name
 
 def getMails():
     conn = getConnection()
@@ -143,7 +156,7 @@ def testModelBySame(blockwordsList,blockfromList): #判断是否为垃圾邮件
     resultList =  list(y_predict)
     resultList =  [int(i) for i in resultList]
     dfLeft['type'] = resultList
-    print(resultList)
+    #print(resultList)
     return dfWhitelist,dfSafe,dfLeft,dfBlocked
 
 
@@ -210,14 +223,13 @@ def joint():
         dict['content']=row['CHTML']
         dict['type']=(int)(row['type'])
         spam.append(dict)
-    print(ham)
-    print('/n')
-    print('/n')
-    print('/n')
-    print('/n')
-    print('/n')
-    print('/n')
-    print('/n')
+   # print(ham)
+    #print('/n')
+   # print('/n')
+    ##rint('/n')
+    #print('/n')
+    #print('/n')
+   # print('/n')
     #print(spam)
     return(ham,spam)
 

@@ -31,21 +31,19 @@ class DBac:
         cur.close()
         conn.close()
     
-    #表，数据
-    def insert(self,table,str):
+    #向表中插入数据,(表名，列名，插入数据)
+    def insert(self,table,lie,str):
         conn = pyodbc.connect(driver=_driver, server=_server, user=_user, password=_password, database=_database)
         cur = conn.cursor()
         words = self.select(table)
-        #print(words)
         wlist = words
         for i in range(0,len(words)):
-            wlist[i] = ''.join(words[i])
-        #print(wlist)
+            wlist[i] = ''.join(words[i][0])
         if str in wlist:
             print('无法添加重复屏蔽词')
         else:
             print("可以添加")
-            sql = "insert into %s"%table + " values('%s')"%str
+            sql = "insert into %s(%s) values('%s')"%(table,lie,str)
             cur.execute(sql)
             conn.commit()
         cur.close()

@@ -38,6 +38,7 @@
     <Compile Include="show.py">
       <SubType>Code</SubType>
     </Compile>
+    <Compile Include="sqltest.py" />
     <Compile Include="start.py">
       <SubType>Code</SubType>
     </Compile>
