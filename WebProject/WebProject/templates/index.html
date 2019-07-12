@@ -1,3 +1,4 @@
+<!--by 衣春腾-->
 <!DOCTYPE html>
 <html lang="en">
   <head>
@@ -24,11 +25,11 @@
           <i class="fa fa-times" id="menu-close"></i>
           <div class="container">
             <div class="image">
-              <a href="#"><img src="../static/images/logo-image.jpg" alt="Blugoon by Tooplate" /></a>
+              <a href="#"><img src="../static/images/wkfg.png" alt="Blugoon by Tooplate" /></a>
             </div>
             <div class="author-content">
-              <h4>无可奉告</h4>
-              <span>1078176775@qq.com</span>
+              
+              <span>{{emailuser}}</span>
             </div>
             <nav class="main-nav" role="navigation">
               <ul class="main-menu">
@@ -39,25 +40,7 @@
                 <li><a class="help" onclick="javascrtpt:window.location.href='/docs'" style="color: #F7F7F7;cursor: pointer;">帮助</a></li>
               </ul>
             </nav>
-            <div class="social-network">
-              <ul class="soial-icons">
-                <li>
-                  <a href="#"><i class="fa fa-facebook"></i></a>
-                </li>
-                <li>
-                  <a href="#"><i class="fa fa-twitter"></i></a>
-                </li>
-                <li>
-                  <a href="#"><i class="fa fa-linkedin"></i></a>
-                </li>
-                <li>
-                  <a href="#"><i class="fa fa-dribbble"></i></a>
-                </li>
-                <li>
-                  <a href="#"><i class="fa fa-rss"></i></a>
-                </li>
-              </ul>
-            </div>
+
             <div class="copyright-text">
               <p>
               Design: 无可奉告
@@ -105,15 +88,7 @@
         {% endfor %}                       
       </div>
    </div>
-    <div class="container">
-      <ul class="pagination">
-        <li class="page-item"><a class="page-link" href="#">Previous</a></li>
-        <li class="page-item"><a class="page-link" href="#">1</a></li>
-        <li class="page-item"><a class="page-link" href="#">2</a></li>
-        <li class="page-item"><a class="page-link" href="#">3</a></li>
-        <li class="page-item"><a class="page-link" href="#">Next</a></li>
-      </ul>
-    </div> 
+
       </section>
 
       <section class="section my-work" data-section="section3">
@@ -289,16 +264,18 @@
       else if(hour>12 && hour<18){document.getElementById("hello").innerHTML = "下午好，无可奉告"}
       else if(hour>16 && hour<24){document.getElementById("hello").innerHTML = "晚上好，无可奉告"}
 
-      showlove();
+      
       function showlove(){
         $.get("/showfocus",
         function(data){
-          alert("您有特别关注的联系人的来信，请及时查收"+data);
+          if(data=='a'){
+            alert("您有特别关注的联系人的来信，请及时查收"+data);
+          }
+          
         })
-
         
       }
-
+      showlove();
 
 
       function appendmail(id,topic,from,content){

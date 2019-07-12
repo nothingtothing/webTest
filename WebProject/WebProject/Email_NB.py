@@ -1,4 +1,5 @@
 # -*- coding: utf-8 -*-
+#by 龙波、张家楠
 import numpy as np
 import re
 import random
@@ -153,8 +154,6 @@ def spamTest():
 
     vocabList += createVocabList(docList)
     trainingSet = list(range(0,MAX*2))
-   #print(vocabList)
-   #print(trainingSet)
 
 
     for i in range((int)(MAX * 0.2)):  # 从50个邮件中，随机挑选出40个作为训练集,10个做测试集
@@ -170,9 +169,6 @@ def spamTest():
         trainClasses.append(classList[docIndex])  # 将类别添加到训练集类别标签系向量中
     p0V, p1V, pSpam = trainNB0(np.array(trainMat), np.array(trainClasses))  # 训练朴素贝叶斯模型\
 
-    #print(p0V)
-    #print(p1V)
-    #print(pSpam)
 
     with open("../data/result_save_p0V",'w', encoding='utf-8') as file:
         for index in range(len(p0V)):

@@ -27,17 +27,12 @@
     <EnableUnmanagedDebugging>false</EnableUnmanagedDebugging>
   </PropertyGroup>
   <ItemGroup>
-    <Compile Include="chinese.py" />
     <Compile Include="chineseYeahYeah.py" />
     <Compile Include="dataCleaner.py" />
     <Compile Include="DBaction.py" />
     <Compile Include="Email_NB.py" />
-    <Compile Include="modelLoadForTest.py" />
     <Compile Include="papapa.py" />
     <Compile Include="realTest.py" />
-    <Compile Include="show.py">
-      <SubType>Code</SubType>
-    </Compile>
     <Compile Include="sqltest.py" />
     <Compile Include="start.py">
       <SubType>Code</SubType>
@@ -46,11 +41,6 @@
   </ItemGroup>
   <ItemGroup>
     <Folder Include="templates\" />
-  </ItemGroup>
-  <ItemGroup>
-    <Content Include="templates\2.html" />
-    <Content Include="templates\image.png" />
-    <Content Include="templates\immm.jpg" />
   </ItemGroup>
   <Import Project="$(MSBuildExtensionsPath32)\Microsoft\VisualStudio\v$(VisualStudioVersion)\Python Tools\Microsoft.PythonTools.Web.targets" />
   <!-- Specify pre- and post-build commands in the BeforeBuild and 

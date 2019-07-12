@@ -1,4 +1,5 @@
 # -*- coding: utf-8 -*
+#by 张家楠
 from sklearn.externals import joblib
 import pandas as pd
 import time
@@ -13,52 +14,23 @@ from sklearn.naive_bayes import BernoulliNB     #伯努利分布的贝叶斯公�
 from sklearn.metrics import f1_score,precision_score,recall_score
 from chineseYeahYeah import jiebaclearText
 import pyodbc
+import poplib
+import html
+import DBaction
 
 
-def getConnection():
-    driver = 'ODBC Driver 17 for SQL Server'  # 因版本不同而异
+
+def getConnection():#连接数据库
+    driver = 'ODBC Driver 17 for SQL Server'  
     server = 'wkfgdbservice.chinanorth.cloudapp.chinacloudapi.cn,1433'  
     user = 'sa'
     password = 'rootL123456789'
     database = 'test'
-    conn = pyodbc.connect(driver=driver, server=server, user=user, password=password, database=database)
+    try:
+        conn = pyodbc.connect(driver=driver, server=server, user=user, password=password, database=database)
+    except Exception as e:
+        print("数据库连接失败",e)
     return(conn)
-
-def getWhitelist():
-    conn=getConnection()
-    cur = conn.cursor()
-    sql = 'select name from Whitelist'  # 查询语句
-    cur.execute(sql)
-    rows = cur.fetchall()# list
-    whitelist=str(rows)
-    index = len(rows)
-    for i in range(0,index):
-        rows[i] = ''.join(rows[i])
-    white_list = rows
-    return white_list
-
-def getBlockedWords():
-    conn=getConnection()
-    cur = conn.cursor()
-    sql = 'select words from BadWords'  # 查询语句
-    cur.execute(sql)
-    rows = cur.fetchall()# list
-    blockwords=str(rows)
-    index = len(rows)
-    for i in range(0,index):
-        rows[i] = ''.join(str(s) for s in rows)
-    words_blocklist = rows
-
-    sql1 = 'select blackMail from BadNames'  # 查询语句
-    cur1 = conn.cursor()
-    cur1.execute(sql1)
-    rows1 = cur1.fetchall()# list
-    blockfrom=str(rows1)
-    index1 = len(rows1)
-    for i in range(0,index1):
-        rows1[i] = ''.join(str(s) for s in rows)
-    from_blocklist = rows1
-    return words_blocklist,from_blocklist
 
 def getFocusname(): #从数据库中获取信息
     conn = getConnection()
@@ -73,36 +45,71 @@ def getFocusname(): #从数据库中获取信息
     focus_name = rows
     return focus_name
 
-def getMails():
+def getWhitelist():#从数据库中获取白名单信息
+    conn=getConnection()
+    cur = conn.cursor()
+    sql = 'select name from Whitelist'  # 查询语句
+    try:
+        cur.execute(sql)
+        rows = cur.fetchall()# list
+        whitelist=str(rows)
+        index = len(rows)
+        for i in range(0,index):
+            rows[i] = ''.join(str(s) for s in rows)
+        white_list = rows
+    except Exception as e:
+        print("请检查sql命令与数据库是否对应",e)
+    return white_list
+
+def getBlockedWords():#从数据库中获取黑名单、屏蔽词信息
+    conn=getConnection()
+    cur = conn.cursor()
+    sql = 'select words from BadWords'  
+    try:
+        cur.execute(sql)
+        rows = cur.fetchall()# list
+        blockwords=str(rows)
+        index = len(rows)
+        for i in range(0,index):
+            rows[i] = ''.join(str(s) for s in rows)
+    except Exception as e:
+        print("请检查sql命令与数据库是否对应",e)
+    words_blocklist = rows
+
+    sql1 = 'select blackMail from BadNames'  
+    cur1 = conn.cursor()
+    try:
+        cur1.execute(sql1)
+        rows1 = cur1.fetchall()# list
+        blockfrom=str(rows1)
+        index1 = len(rows1)
+        for i in range(0,index1):
+            rows1[i] = ''.join(str(s) for s in rows)
+    except Exception as e:
+        print("请检查sql命令与数据库是否对应",e)
+    from_blocklist = rows1
+    return words_blocklist,from_blocklist
+
+def getMails(): #从数据库中获取邮件信息
     conn = getConnection()
-    sql2 = 'select * from emailTest'  # 查询语句
-    #cur2 = conn.cursor()
-    #cur2.execute(sql2)
-    df = pd.read_sql(sql2, conn)
-   # print(df)
-    #rows2 = cur2.fetchall()# list
-    #blockfrom=str(rows2)
-    #index2 = len(rows2)
-    #for i in range(0,index2):
-    #ows2[i] = ''.join(rows2[i]
+    sql2 = 'select * from emailTest' 
+    try:
+        df = pd.read_sql(sql2, conn)
+    except Exception as e:
+        print("请检查sql命令与数据库是否对应",e)
     return df
 
-def testModelBySame(blockwordsList,blockfromList): #判断是否为垃圾邮件
+def testModelBySame(blockwordsList,blockfromList):   #判断是否为垃圾邮件
     words_blocklist,from_blocklist=getBlockedWords()
     white_list=getWhitelist()
     df=getMails()
-    dfForEvaluate = df[df['type']==2]
-    #print("dfForEvaluate")
-    #print(dfForEvaluate)
-    dfSafe = df[df['type']==0]
-    #print("dfSafe")
-    #print(dfSafe)
+    dfForEvaluate = df[df['type']==2]   #获取待分类邮件信息，以pandas表格存储
+    dfSafe = df[df['type']==0]  #含附件的邮件默认为正常邮件
     wordsStr = list(dfForEvaluate["content"].astype("str"))
     fromStr = list(dfForEvaluate["from"].astype("str")) 
     titleStr =  list(dfForEvaluate["title"].astype("str"))
-   # print(titleStr)
-    i=-1
-    for myword in fromStr:#如在白名单中，直接判为正常邮件。在黑名单中，直接判为垃圾邮件。
+    i=-1    #记录读取的序号
+    for myword in fromStr:  #如在白名单中，直接判为正常邮件。在黑名单中，直接判为垃圾邮件。
         i=i+1
         for word in myword.strip().split(","):
             if(word in white_list):
@@ -115,58 +122,47 @@ def testModelBySame(blockwordsList,blockfromList): #判断是否为垃圾邮件
                 dfForEvaluate.ix[i,'blocked']=2
    
 
- 
-    #print(wordsStr)
-    j=-1
-    for myword2 in titleStr:
+    j=-1    #记录读取的序号
+    for myword2 in titleStr:    #如果标题中存在屏蔽词，直接判为垃圾邮件
             j=j+1
             for eachword1 in words_blocklist:
                 if(myword2.find(eachword1)!=-1):
-                   # print(myword2)
                     dfForEvaluate.ix[j,'blocked']=1
                     dfForEvaluate.ix[j,'type']=1
            
 
     k=-1
-    for myword1 in wordsStr:
+    for myword1 in wordsStr:    #如果内容中存在屏蔽词，直接判为垃圾邮件
             k=k+1
             for eachword in words_blocklist:
                 if(myword1.find(eachword)!=-1):
-                   # print(myword1)
                     dfForEvaluate.ix[k,'blocked']=1
                     dfForEvaluate.ix[k,'type']=1
               
-
-    #print(dfForEvaluate)
-    dfBlocked = dfForEvaluate[dfForEvaluate['blocked'] == 1]
-    dfWhitelist = dfForEvaluate[dfForEvaluate['blocked'] == 0]
-    dfLeft = dfForEvaluate[dfForEvaluate['blocked'] ==2]
-    transformer_model = joblib.load("../data/result_save_TFM_try")
+                        
+    dfBlocked = dfForEvaluate[dfForEvaluate['blocked'] == 1]    #被屏蔽的邮件
+    dfWhitelist = dfForEvaluate[dfForEvaluate['blocked'] == 0]  #白名单邮件
+    dfLeft = dfForEvaluate[dfForEvaluate['blocked'] ==2]        #除以上两者剩余邮件
+    transformer_model = joblib.load("../data/result_save_TFM_try")  #载入保存的模型进行预测
     svd_model = joblib.load("../data/result_save_SVDM_try")
     model = joblib.load("../data/result_save_AdaBoost_try")
-    #print(model)
     jieba_cut_content = list(dfLeft["content"].astype("str"))
     jieba_cut_content = [jiebaclearText(line) for line in jieba_cut_content]
-    #print(jieba_cut_content)
-    #print(testList)
     y_test = dfLeft["type"]
     data_test = pd.DataFrame(svd_model.transform(transformer_model.transform(jieba_cut_content)))
-
     y_predict = model.predict(data_test)
-    resultList =  list(y_predict)
-    resultList =  [int(i) for i in resultList]
+    resultList =  list(y_predict)   #存放预测结果
+    resultList =  [int(i) for i in resultList]  
     dfLeft['type'] = resultList
-    #print(resultList)
     return dfWhitelist,dfSafe,dfLeft,dfBlocked
 
-
-   # print("准确率为:%.5f" % precision_score(y_test,y_predict))
-   # print("召回率为:%.5f" % recall_score(y_test,y_predict))
-   # print("F1值为:%.5f" % f1_score(y_test,y_predict))
-   
-#guolv("../data/blockedwords.txt","../data/blockedfrom.txt","../data/half_40")
-#testModelBySame(words_blocklist,from_blocklist,"../data/test_half_40")
 def joint():
+    '''
+    根据得到的屏蔽邮件、白名单邮件、剩余邮件等
+    生成最终的垃圾邮件和正常邮件
+    '''
+
+    
     words_blocklist,from_blocklist=getBlockedWords()
     df=getMails()
     dfWhitelist,dfSafe,dfLeft,dfBlocked = testModelBySame(words_blocklist,from_blocklist)
@@ -204,6 +200,7 @@ def joint():
         dict['type']=(int)(row['type'])
         ham.append(dict)
 
+
     for  index, row in dfSpam.iterrows():
         dict ={}
         dict['id']=row['ID']
@@ -223,14 +220,4 @@ def joint():
         dict['content']=row['CHTML']
         dict['type']=(int)(row['type'])
         spam.append(dict)
-   # print(ham)
-    #print('/n')
-   # print('/n')
-    ##rint('/n')
-    #print('/n')
-    #print('/n')
-   # print('/n')
-    #print(spam)
     return(ham,spam)
-
-joint()

@@ -1,3 +1,4 @@
+#by 龙波
 import jieba
 '''
 text_path = "init.txt"

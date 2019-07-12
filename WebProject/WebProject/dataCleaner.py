@@ -1,6 +1,5 @@
-#!/usr/bin/env python
 # -*- coding:utf-8 -*-
-
+#by 龙波
 
 import os
 import re
@@ -16,13 +15,12 @@ def read_index_file(file_path):
     try:
         for line in index_file:  # 按行循环读取文件
             arr = line.split(" ")  # 用“空格”进行分割
-            #pd.read_csv("full/index",sep=" ")      #pandas来写与上面等价
             if len(arr) == 2:       #分割完之后如果长度是2
                 key,value = arr     ##分别将spam  ../data/178/129赋值给key与value
             #添加到字段中
             value = value.replace("../data","").replace("\n","")    #替换
             # 字典赋值，字典名[键]=值，lower()将所有的字母转换成小写
-            index_dict[value] = type_dict[key.lower()]      #
+            index_dict[value] = type_dict[key.lower()]      
     finally:
         index_file.close()
     return index_dict
@@ -67,7 +65,6 @@ def process_file(file_path):
     result_str = content_dict.get("from","unkown").replace(",","").strip()+","
     result_str += content_dict.get("to","unkown").replace(",","").strip()+","
     result_str += content_dict.get("data","unkown").replace(",","").strip()+","
-    #result_str += content_dict.get("content","unkown").replace(",","").strip()
     firstText = content_dict.get("content","unkown").replace(",","").strip()
     firstText = firstText.replace("+","").strip()
     firstText = firstText.replace("_","").strip()
@@ -78,12 +75,10 @@ def process_file(file_path):
 ## os.listdir    返回指定的文件夹包含的文件或文件夹包含的名称列表
 index_dict = read_index_file('../data/full/index')
 list0 = os.listdir('../data/data')      #list0是范围为[000-215]的列表\
-# print(list0)
 for l1 in list0:    # l1:循环000--215
     l1_path = '../data/data/' + l1      #l1_path   ../data/data/215
     print('开始处理文件夹:' + l1_path)
     list1 = os.listdir(l1_path)     #list1:['000', '001', '002', '003'....'299']
-    # print(list1)
     write_file_path = '../data/process01_' + l1
     with open(write_file_path, "w", encoding='utf-8') as writer:
         for l2 in list1:  # l2:循环000--299
@@ -99,17 +94,7 @@ for l1 in list0:    # l1:循环000--215
                 # 进行数据输出
                 writer.writelines(content_str)
 
-
-with open('../data/result_process01', 'w', encoding='utf-8') as writer:
-        for l1 in list0:
-            file_path = '../data/process01_' + l1
-            print("开始合并文件:" + file_path)
-            with open(file_path, encoding='utf-8') as file:
-                for line in file:
-                        writer.writelines(line)                   
-
-
-
+#将垃圾和非垃圾邮件分开存储
 with open('../data/result_spam', 'w', encoding='utf-8') as spamWriter:
     with open('../data/result_ham', 'w', encoding='utf-8') as hamWriter:
         for l1 in list0:
@@ -120,4 +105,17 @@ with open('../data/result_spam', 'w', encoding='utf-8') as spamWriter:
                     if(re.match(r'.*,.*,.*,.*,1',line)):
                         spamWriter.writelines(line)
                     else:
-                        hamWriter.writelines(line)                     
+                        hamWriter.writelines(line)             
+
+#将结果存储于同一文件中
+with open('../data/result_process01', 'w', encoding='utf-8') as writer:
+        for l1 in list0:
+            file_path = '../data/process01_' + l1
+            print("开始合并文件:" + file_path)
+            with open(file_path, encoding='utf-8') as file:
+                for line in file:
+                        writer.writelines(line)                   
+
+
+
+        
