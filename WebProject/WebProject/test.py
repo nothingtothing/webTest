@@ -24,7 +24,7 @@ def getConnection():#连接数据库
     driver = 'ODBC Driver 17 for SQL Server'  
     server = 'wkfgdbservice.chinanorth.cloudapp.chinacloudapi.cn,1433'  
     user = 'sa'
-    password = 'rootL123456789'
+    password = ''
     database = 'test'
     try:
         conn = pyodbc.connect(driver=driver, server=server, user=user, password=password, database=database)

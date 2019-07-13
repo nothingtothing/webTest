@@ -5,7 +5,7 @@ import pyodbc
 _driver = 'ODBC Driver 17 for SQL Server'
 _server = 'wkfgdbservice.chinanorth.cloudapp.chinacloudapi.cn,1433'  
 _user = 'sa'
-_password = 'rootL123456789'
+_password = ''
 _database = 'test'
     
 class DBac:
