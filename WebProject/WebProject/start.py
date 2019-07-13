@@ -245,7 +245,7 @@ app.config['MAIL_PASSWORD'] = 'veztvpjocggzjbdb'
 
 mail = Mail(app)
 
-
+addNew()
 ham,spam=joint()
 focusname=getFocusname()
 
@@ -483,6 +483,5 @@ def addfocusname():
     return FocusName
 
 if __name__ == '__main__':
-    addNew()
     app.run(host = '0.0.0.0', port = 8000)
 

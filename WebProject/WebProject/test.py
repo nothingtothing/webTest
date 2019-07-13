@@ -9,8 +9,8 @@ import matplotlib as mpl
 import matplotlib.pyplot as plt
 from sklearn.feature_extraction.text import CountVectorizer,TfidfVectorizer
 from sklearn.model_selection import train_test_split
-from sklearn.decomposition import TruncatedSVD  #降维
-from sklearn.naive_bayes import BernoulliNB     #伯努利分布的贝叶斯公式
+from sklearn.decomposition import TruncatedSVD  
+from sklearn.naive_bayes import BernoulliNB     
 from sklearn.metrics import f1_score,precision_score,recall_score
 from chineseYeahYeah import jiebaclearText
 import pyodbc
@@ -41,7 +41,7 @@ def getFocusname(): #从数据库中获取信息
     focusname=str(rows)
     index = len(rows)
     for i in range(0,index):
-        rows[i] = ''.join(str(s) for s in rows)
+        rows[i] = ''.join(rows[i])
     focus_name = rows
     return focus_name
 
@@ -55,7 +55,7 @@ def getWhitelist():#从数据库中获取白名单信息
         whitelist=str(rows)
         index = len(rows)
         for i in range(0,index):
-            rows[i] = ''.join(str(s) for s in rows)
+            rows[i] = ''.join(rows[i])
         white_list = rows
     except Exception as e:
         print("请检查sql命令与数据库是否对应",e)
@@ -71,7 +71,7 @@ def getBlockedWords():#从数据库中获取黑名单、屏蔽词信息
         blockwords=str(rows)
         index = len(rows)
         for i in range(0,index):
-            rows[i] = ''.join(str(s) for s in rows)
+            rows[i] = ''.join(rows[i])
     except Exception as e:
         print("请检查sql命令与数据库是否对应",e)
     words_blocklist = rows
@@ -84,7 +84,7 @@ def getBlockedWords():#从数据库中获取黑名单、屏蔽词信息
         blockfrom=str(rows1)
         index1 = len(rows1)
         for i in range(0,index1):
-            rows1[i] = ''.join(str(s) for s in rows)
+            rows1[i] = ''.join(rows1[i])
     except Exception as e:
         print("请检查sql命令与数据库是否对应",e)
     from_blocklist = rows1
